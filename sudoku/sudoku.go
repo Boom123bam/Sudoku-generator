@@ -84,11 +84,22 @@ func (grid SudokuGrid) GridIsValid() bool {
 
 func (grid SudokuGrid) String() string {
 	res := bytes.Buffer{}
-	for _, row := range grid {
-		for _, num := range row {
-			res.WriteString(fmt.Sprintf("%v ", num))
+	for r, row := range grid {
+		for c, num := range row {
+			if num == 0 {
+				res.WriteString("_ ")
+			} else {
+				res.WriteString(fmt.Sprintf("%v ", num))
+			}
+			if c == 2 || c == 5 {
+				res.WriteString(" ")
+			}
 		}
 		res.WriteString("\n")
+
+		if r == 2 || r == 5 {
+			res.WriteString("\n")
+		}
 	}
 	return res.String()
 }
