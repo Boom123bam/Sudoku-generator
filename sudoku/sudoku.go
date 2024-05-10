@@ -10,7 +10,7 @@ type SudokuGrid [9][9]int
 func (grid SudokuGrid) Solve(cell int) []SudokuGrid {
 	solutions := []SudokuGrid{}
 	if cell == 81 {
-		solutions = append(solutions, grid.copy())
+		solutions = append(solutions, grid.Copy())
 		return solutions
 	}
 	r := cell / 9
@@ -21,7 +21,7 @@ func (grid SudokuGrid) Solve(cell int) []SudokuGrid {
 	}
 
 	for num := 1; num <= 9; num++ {
-		if !grid.isValidCell(r, c, num) {
+		if !grid.CellIsValid(r, c, num) {
 			continue
 		}
 		grid[r][c] = num
@@ -32,7 +32,7 @@ func (grid SudokuGrid) Solve(cell int) []SudokuGrid {
 	return solutions
 }
 
-func (grid SudokuGrid) isValidCell(r int, c int, num int) bool {
+func (grid SudokuGrid) CellIsValid(r int, c int, num int) bool {
 	// horizontal
 	for _, n := range grid[r] {
 		if n == num {
@@ -59,22 +59,20 @@ func (grid SudokuGrid) isValidCell(r int, c int, num int) bool {
 	return true
 }
 
-func (g SudokuGrid) copy() SudokuGrid {
-	copy := SudokuGrid{}
+func (g SudokuGrid) Copy() SudokuGrid {
+	result := SudokuGrid{}
 	for r := 0; r < len(g); r++ {
-		for c := 0; c < len(g[r]); c++ {
-			copy[r][c] = g[r][c]
-		}
+		copy(result[r][:], g[r][:])
 	}
-	return copy
+	return result
 }
 
-func (grid SudokuGrid) isValid() bool {
+func (grid SudokuGrid) GridIsValid() bool {
 	temp := 0
 	for r := 0; r < len(grid); r++ {
 		for c := 0; c < len(grid[r]); c++ {
 			temp, grid[r][c] = grid[r][c], 0
-			if !grid.isValidCell(r, c, temp) {
+			if !grid.CellIsValid(r, c, temp) {
 				grid[r][c] = temp
 				return false
 			}

@@ -27,5 +27,8 @@ func main() {
 		{0, 4, 0, 0, 5, 0, 0, 3, 6},
 		{7, 0, 3, 0, 1, 8, 0, 0, 0},
 	}
-	fmt.Println(grid.Solve(0))
+	sols := grid.Solve(0)
+	for _, sol := range sols {
+		fmt.Println(sol)
+	}
 }
