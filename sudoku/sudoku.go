@@ -11,7 +11,7 @@ type SudokuGrid [9][9]int
 func (grid SudokuGrid) Solve(cell int) []SudokuGrid {
 	solutions := []SudokuGrid{}
 	if cell == 81 {
-		solutions = append(solutions, grid.Copy())
+		solutions = append(solutions, grid)
 		return solutions
 	}
 	r := cell / 9
