@@ -3,6 +3,7 @@ package sudoku
 import (
 	"bytes"
 	"fmt"
+	"math/rand/v2"
 )
 
 type SudokuGrid [9][9]int
@@ -102,4 +103,33 @@ func (grid SudokuGrid) String() string {
 		}
 	}
 	return res.String()
+}
+
+func (grid SudokuGrid) FillRandom(cell int) *SudokuGrid {
+	if cell == 81 {
+		return &grid
+	}
+	r := cell / 9
+	c := cell % 9
+
+	if grid[r][c] != 0 {
+		return grid.FillRandom(cell + 1)
+	}
+
+	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
+	for len(nums) > 0 {
+		i := rand.IntN(len(nums))
+		num := nums[i]
+		nums = append(nums[:i], nums[i+1:]...)
+		if !grid.CellIsValid(r, c, num) {
+			continue
+		}
+		grid[r][c] = num
+		result := grid.FillRandom(cell + 1)
+		if result != nil {
+			return result
+		}
+		grid[r][c] = 0
+	}
+	return nil
 }
