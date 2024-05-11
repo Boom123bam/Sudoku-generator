@@ -133,3 +133,29 @@ func (grid SudokuGrid) FillRandom(cell int) *SudokuGrid {
 	}
 	return nil
 }
+
+func (grid SudokuGrid) SubtractRandom() *SudokuGrid {
+	// assume filled grid
+
+	remainingCells := 81
+	subtractableCells := make([]int, 81)
+	for i := range subtractableCells {
+		subtractableCells[i] = i
+	}
+
+	target := 30 - rand.IntN(5)
+	for remainingCells > target && len(subtractableCells) > 0 {
+		n := rand.IntN(len(subtractableCells))
+		r, c := subtractableCells[n]/9, subtractableCells[n]%9
+		temp := grid[r][c]
+		grid[r][c] = 0
+		if len(grid.Solve(0)) > 1 {
+			grid[r][c] = temp
+		} else {
+			remainingCells--
+		}
+		subtractableCells = append(subtractableCells[:n], subtractableCells[n+1:]...)
+	}
+
+	return &grid
+}
