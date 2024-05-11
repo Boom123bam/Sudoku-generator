@@ -1,0 +1,16 @@
+package main
+
+import (
+	"sudoku-generator/sudoku"
+	"strconv"
+)
+
+templ sudokuGrid(grid sudoku.SudokuGrid) {
+	<div class="grid">
+		for _, row := range grid {
+			for _, num := range row {
+				<div class="cell">{ strconv.Itoa(num) }</div>
+			}
+		}
+	</div>
+}
