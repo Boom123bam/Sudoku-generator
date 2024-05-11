@@ -8,6 +8,15 @@ import (
 
 type SudokuGrid [9][9]int
 
+func NewGrid(random bool) SudokuGrid {
+	grid := SudokuGrid{}
+	if !random {
+		return grid
+	}
+	res := grid.fillRandom(0)
+	return *res.subtractRandom()
+}
+
 func (grid SudokuGrid) Solve(cell int) []SudokuGrid {
 	solutions := []SudokuGrid{}
 	if cell == 81 {
@@ -60,13 +69,13 @@ func (grid SudokuGrid) CellIsValid(r int, c int, num int) bool {
 	return true
 }
 
-func (g SudokuGrid) Copy() SudokuGrid {
-	result := SudokuGrid{}
-	for r := 0; r < len(g); r++ {
-		copy(result[r][:], g[r][:])
-	}
-	return result
-}
+// func (g SudokuGrid) Copy() SudokuGrid {
+// 	result := SudokuGrid{}
+// 	for r := 0; r < len(g); r++ {
+// 		copy(result[r][:], g[r][:])
+// 	}
+// 	return result
+// }
 
 func (grid SudokuGrid) GridIsValid() bool {
 	temp := 0
@@ -105,7 +114,7 @@ func (grid SudokuGrid) String() string {
 	return res.String()
 }
 
-func (grid SudokuGrid) FillRandom(cell int) *SudokuGrid {
+func (grid SudokuGrid) fillRandom(cell int) *SudokuGrid {
 	if cell == 81 {
 		return &grid
 	}
@@ -113,7 +122,7 @@ func (grid SudokuGrid) FillRandom(cell int) *SudokuGrid {
 	c := cell % 9
 
 	if grid[r][c] != 0 {
-		return grid.FillRandom(cell + 1)
+		return grid.fillRandom(cell + 1)
 	}
 
 	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -125,7 +134,7 @@ func (grid SudokuGrid) FillRandom(cell int) *SudokuGrid {
 			continue
 		}
 		grid[r][c] = num
-		result := grid.FillRandom(cell + 1)
+		result := grid.fillRandom(cell + 1)
 		if result != nil {
 			return result
 		}
@@ -134,7 +143,7 @@ func (grid SudokuGrid) FillRandom(cell int) *SudokuGrid {
 	return nil
 }
 
-func (grid SudokuGrid) SubtractRandom() *SudokuGrid {
+func (grid SudokuGrid) subtractRandom() *SudokuGrid {
 	// assume filled grid
 
 	remainingCells := 81
