@@ -20,8 +20,8 @@ type FormConstraints struct {
 }
 
 var formConstraints = FormConstraints{
-	MaxPages:              10,
-	SudokusPerPageOptions: []int{1, 2, 6},
+	MaxPages:              5,
+	SudokusPerPageOptions: []int{2, 6},
 }
 
 type Page struct {
@@ -29,7 +29,8 @@ type Page struct {
 }
 
 type SudokusData struct {
-	Pages []Page
+	Pages          []Page
+	SudokusPerPage int
 }
 
 func (formData FormData) IsValid() bool {
@@ -83,7 +84,7 @@ func main() {
 		}
 		fmt.Println(formData)
 
-		sudokusData := SudokusData{}
+		sudokusData := SudokusData{SudokusPerPage: formData.SudokusPerPage}
 
 		for page := 0; page < formData.Pages; page++ {
 			page := Page{}
