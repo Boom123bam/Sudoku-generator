@@ -1,0 +1,10 @@
+.grid {
+  width: 30%;
+  aspect-ratio: 1;
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+}
+
+.box {
+  border: 1px solid black;
+}

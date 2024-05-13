@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"sudoku-generator/sudoku"
+	"sudoku-generator/view"
 
 	"github.com/a-h/templ"
 )
@@ -15,9 +15,13 @@ import (
 // }
 
 func main() {
-	grid := sudoku.NewGrid(true)
-	component := sudokuGrid(grid)
-	http.Handle("/", templ.Handler(component))
+	page := view.Base()
+
+	// Serve static files from the "static" directory
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
+	http.Handle("/", templ.Handler(page))
 	log.Fatal(http.ListenAndServe(":8080", nil))
 
 }
