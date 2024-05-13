@@ -36,6 +36,9 @@ func (formData FormData) IsValid() bool {
 }
 
 func main() {
+	fs := http.FileServer(http.Dir("static"))
+	http.Handle("/static/", http.StripPrefix("/static/", fs))
+
 	templates := template.Must(template.ParseGlob("views/*.html"))
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

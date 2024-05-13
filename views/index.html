@@ -9,6 +9,7 @@
     />
     <title>Document</title>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <link href="./static/output.css" rel="stylesheet">
   </head>
   <body>
     {{ template "form" . }}
@@ -32,5 +33,5 @@
 {{ end }}
 
 {{ block "sudokus" . }}
-<h1>response</h1>
+<h1 class="text-lime-400 font-bold">response</h1>
 {{ end }}
