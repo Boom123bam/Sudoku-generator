@@ -1,15 +1,17 @@
 package main
 
 import (
-	"fmt"
-	"sudoku-generator/sudoku"
+	"html/template"
+	"log"
+	"net/http"
 )
 
 func main() {
-	for i := 0; i < 100; i++ {
-		fmt.Println(i)
-		grid := sudoku.NewGrid(true)
-		fmt.Println(grid)
-		fmt.Println(grid.Solve(0))
-	}
+	templates := template.Must(template.ParseGlob("views/*.html"))
+
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		templates.ExecuteTemplate(w, "index", struct{}{})
+	})
+
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }

@@ -1,0 +1,25 @@
+{{ block "index" . }}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <title>Document</title>
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+  </head>
+  <body>
+    {{ template "form" . }}
+  </body>
+</html>
+{{ end }}
+
+{{ block "form" .}}
+<form hx-target="#contacts" hx-post="/contacts" hx-swap="outerHTML">
+  name: <input type="text" name="name" />
+  email: <input type="text" name="email" />
+  <button type="submit">submit</button>
+</form>
+{{ end }}
