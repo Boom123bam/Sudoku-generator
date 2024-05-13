@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"sudoku-generator/sudoku"
 )
 
 type FormData struct {
@@ -21,6 +22,11 @@ type FormConstraints struct {
 var formConstraints = FormConstraints{
 	MaxPages:              10,
 	SudokusPerPageOptions: []int{1, 2, 6},
+}
+
+type Sudokus struct {
+	SudokusPerPage int
+	Sudokus        []sudoku.SudokuGrid
 }
 
 func (formData FormData) IsValid() bool {
@@ -68,7 +74,14 @@ func main() {
 		}
 		fmt.Println(formData)
 
-		templates.ExecuteTemplate(w, "sudokus", struct{}{})
+		sudokus := Sudokus{SudokusPerPage: formData.SudokusPerPage}
+
+		for i := 0; i < formData.SudokusPerPage; i++ {
+			sudoku := sudoku.NewGrid(true)
+			sudokus.Sudokus = append(sudokus.Sudokus, sudoku)
+		}
+
+		templates.ExecuteTemplate(w, "sudokus", sudokus)
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

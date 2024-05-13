@@ -2,7 +2,11 @@
 module.exports = {
   content: ["./views/*.html"],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        primary: "lightblue",
+      },
+    },
   },
   plugins: [],
 };
