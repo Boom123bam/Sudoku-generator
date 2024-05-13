@@ -45,7 +45,13 @@ func main() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
 
-	templates := template.Must(template.ParseGlob("views/*.html"))
+	templates := template.New("")
+	templates.Funcs(template.FuncMap{"mod": func(i, j int) bool { return i%j == 0 }})
+
+	_, err := templates.ParseGlob("views/*.html")
+	if err != nil {
+		log.Fatalf("Error parsing templates: %v", err)
+	}
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		templates.ExecuteTemplate(w, "index", formConstraints)

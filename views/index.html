@@ -71,15 +71,15 @@
 {{ end }}
 
 {{ block "sudokus" . }}
-  <div class="grid grid-cols-2 grid-rows-3 gap-4">
-  {{ range .Sudokus }}
-    <div class="grid grid-cols-9 w-full aspect-square">
-      {{ range . }}
-        {{ range . }}
-          <div class="border-black border">{{.}}</div>
+    <div class="grid grid-cols-2 gap-4">
+    {{ range .Sudokus }}
+      <div class="grid grid-cols-9 w-full aspect-square max-w-96 border-black border-b-2 border-r-2">
+        {{ range $rowIndex, $row := . }}
+          {{ range $colIndex, $value := $row }}
+            <div class="border-black border-l border-t flex justify-center items-center text-lg {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ $value }}</div> 
+          {{ end }}
         {{ end }}
-      {{ end }}
+      </div>
+    {{ end }}
     </div>
-  {{ end }}
-  </div>
 {{ end }}
