@@ -29,7 +29,7 @@
     <form class="space-y-4" hx-post="/generate" hx-target="body">
       <div class="flex items-center space-x-2">
         <label for="pages" class="text-gray-700">
-          Number of Puzzles:
+          Number of Pages:
         </label>
         <input
           name="pages"
@@ -71,15 +71,26 @@
 {{ end }}
 
 {{ block "sudokus" . }}
-    <div class="grid grid-cols-2 gap-4">
-    {{ range .Sudokus }}
-      <div class="grid grid-cols-9 w-full aspect-square max-w-96 border-black border-b-2 border-r-2">
-        {{ range $rowIndex, $row := . }}
-          {{ range $colIndex, $value := $row }}
-            <div class="border-black border-l border-t flex justify-center items-center text-lg {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ $value }}</div> 
-          {{ end }}
-        {{ end }}
+    <div class="flex flex-col items-center">
+    {{ range $i, $page := .Pages }}
+      {{ if ne $i 0 }}
+      <hr class="w-full h-8 y-100 border-0 bg-gray-50 no-print"/>
+      {{ end }}
+      <div class="h-screen grid grid-cols-2 grid-rows-3 gap-y-1 gap-x-3 justify-items-center p-2">
+      {{ range $page.Sudokus }}
+        {{ template "sudoku" .}}
+      {{ end }}
       </div>
     {{ end }}
     </div>
+{{ end }}
+
+{{ block "sudoku" . }}
+  <div class="grid grid-cols-9 aspect-square max-w-96 border-black border-b-2 border-r-2">
+    {{ range $rowIndex, $row := . }}
+      {{ range $colIndex, $value := $row }}
+        <div class="text-4xl leading-3 border-black border-l border-t flex justify-center items-center {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ if ne $value 0 }}{{ $value }}{{ end }}</div> 
+      {{ end }}
+    {{ end }}
+  </div>
 {{ end }}

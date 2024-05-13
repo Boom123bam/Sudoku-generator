@@ -24,9 +24,12 @@ var formConstraints = FormConstraints{
 	SudokusPerPageOptions: []int{1, 2, 6},
 }
 
-type Sudokus struct {
-	SudokusPerPage int
-	Sudokus        []sudoku.SudokuGrid
+type Page struct {
+	Sudokus []sudoku.SudokuGrid
+}
+
+type SudokusData struct {
+	Pages []Page
 }
 
 func (formData FormData) IsValid() bool {
@@ -80,14 +83,18 @@ func main() {
 		}
 		fmt.Println(formData)
 
-		sudokus := Sudokus{SudokusPerPage: formData.SudokusPerPage}
+		sudokusData := SudokusData{}
 
-		for i := 0; i < formData.SudokusPerPage; i++ {
-			sudoku := sudoku.NewGrid(true)
-			sudokus.Sudokus = append(sudokus.Sudokus, sudoku)
+		for page := 0; page < formData.Pages; page++ {
+			page := Page{}
+			for i := 0; i < formData.SudokusPerPage; i++ {
+				sudoku := sudoku.NewGrid(true)
+				page.Sudokus = append(page.Sudokus, sudoku)
+			}
+			sudokusData.Pages = append(sudokusData.Pages, page)
 		}
 
-		templates.ExecuteTemplate(w, "sudokus", sudokus)
+		templates.ExecuteTemplate(w, "sudokus", sudokusData)
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
