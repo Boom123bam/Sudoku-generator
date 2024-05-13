@@ -17,9 +17,20 @@
 {{ end }}
 
 {{ block "form" .}}
-<form hx-target="#contacts" hx-post="/contacts" hx-swap="outerHTML">
-  name: <input type="text" name="name" />
-  email: <input type="text" name="email" />
-  <button type="submit">submit</button>
+<form hx-post="/generate" hx-swap="outerHTML">
+  <label for="pages">Pages:</label>
+  <input type="number" id="pages" name="pages" min="1" max="{{ .MaxPages }}" required value="1"/><br /><br />
+
+  <label for="items">Sudokus per page:</label><br />
+  {{ range .SudokusPerPageOptions }}
+  <input type="radio" name="sudokusPerPage" value="{{.}}" required />
+  <label for="item1">{{.}}</label><br />
+  {{ end }}
+
+  <button type="submit">Submit</button>
 </form>
+{{ end }}
+
+{{ block "sudokus" . }}
+<h1>response</h1>
 {{ end }}
