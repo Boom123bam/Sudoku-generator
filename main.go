@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"strconv"
+	"sudoku-generator/seed"
 	"sudoku-generator/sudoku"
 )
 
@@ -94,7 +95,7 @@ func main() {
 		for page := 0; page < formData.Pages; page++ {
 			page := Page{}
 			for i := 0; i < formData.SudokusPerPage; i++ {
-				seed := sudoku.GenerateSeed()
+				seed := seed.GenerateSeed()
 				sudoku := Sudoku{Grid: sudoku.NewGrid(&seed, false), Seed: string(seed)}
 				page.Sudokus = append(page.Sudokus, sudoku)
 			}

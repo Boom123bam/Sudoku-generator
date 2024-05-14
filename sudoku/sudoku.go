@@ -2,40 +2,14 @@ package sudoku
 
 import (
 	"bytes"
-	"crypto/sha256"
-	"encoding/binary"
 	"fmt"
 	"math/rand/v2"
-	"time"
+	"sudoku-generator/seed"
 )
 
 type SudokuGrid [9][9]int
 
-type Seed []byte
-
-func GenerateSeed() Seed {
-	now := time.Now().UnixNano()
-	buf := make([]byte, 8)
-	binary.LittleEndian.PutUint64(buf, uint64(now))
-	sha := sha256.Sum256(buf)
-	return ToCharset(sha[:8])
-}
-
-func ToCharset(chars []byte) []byte {
-	charset := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	for i, char := range chars {
-		chars[i] = charset[int(char)%len(charset)]
-	}
-	return chars
-}
-
-func (seed Seed) To32byte() [32]byte {
-	result := [32]byte{}
-	copy(result[:], seed)
-	return result
-}
-
-func NewGrid(seed *Seed, solved bool) SudokuGrid {
+func NewGrid(seed *seed.Seed, solved bool) SudokuGrid {
 	grid := SudokuGrid{}
 	if seed == nil {
 		return grid
