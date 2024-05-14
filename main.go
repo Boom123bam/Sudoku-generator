@@ -51,6 +51,10 @@ func (formData FormData) IsValid() bool {
 	return false
 }
 
+type ErrorData struct {
+	Message string
+}
+
 func main() {
 	fs := http.FileServer(http.Dir("static"))
 	http.Handle("/static/", http.StripPrefix("/static/", fs))
@@ -106,17 +110,23 @@ func main() {
 	})
 
 	http.HandleFunc("/check", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println("arst")
-		templates.ExecuteTemplate(w, "check", struct{}{})
+		templates.ExecuteTemplate(w, "check", nil)
 	})
 
 	http.HandleFunc("/solution", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
-		seed := r.Form.Get("seed")
+		input := r.Form.Get("seed")
 
-		fmt.Println(seed)
+		s := seed.Seed([]byte(input))
+		if !s.Isvalid() {
+			errorData := ErrorData{
+				Message: "Invalid ID! Please check your ID",
+			}
+			templates.ExecuteTemplate(w, "errormessage", errorData)
+			return
+		}
 
-		// templates.ExecuteTemplate(w, "sudokus", sudokusData)
+		templates.ExecuteTemplate(w, "solutiongrid", sudoku.NewGrid(&s, true))
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

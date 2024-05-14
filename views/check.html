@@ -12,16 +12,18 @@
       <link href="./static/output.css" rel="stylesheet">
     </head>
     <body>
-      {{ template "solutionform" . }}
+        <main class="flex flex-col items-center justify-center h-screen bg-gray-100 gap-3">
+            {{ template "solutionform" . }}
+            <div id="solutionarea"></div>
+        </main>
     </body>
   </html>
 {{ end }}
 
 {{ block "solutionform" .}}
-  <main class="flex flex-col items-center justify-center h-screen bg-gray-100">
     <div class="max-w-md w-full space-y-6 p-6 bg-white rounded-lg shadow-md">
       <h1 class="text-3xl font-bold text-center text-gray-900">Check solution</h1>
-      <form class="space-y-4" hx-post="/solution" hx-target="body">
+      <form class="space-y-4" hx-post="/solution" hx-target="#solutionarea">
         <div class="flex items-center space-x-2">
           <label for="seed" class="text-gray-700">
             Puzzle ID:
@@ -41,5 +43,15 @@
         </button>
       </form>
     </div>
-  </main>
+{{ end }}
+
+{{ block "errormessage" . }}
+  <h1 class="text-red-500 text-lg font-bold mt-3">{{ .Message }}</h1>
+{{ end }}
+
+
+{{ block "solutiongrid" . }}
+    <div class="h-96">
+        {{ template "sudokugrid" .}}
+    </div>
 {{ end }}

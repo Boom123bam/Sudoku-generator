@@ -89,13 +89,18 @@
 
 {{ block "sudoku" . }}
   <div class="relative">
-      <div class="aspect-square h-full grid grid-cols-9 border-black border-b-2 border-r-2">
-        {{ range $rowIndex, $row := .Grid }}
-          {{ range $colIndex, $value := $row }}
-            <div class="text-inherit leading-3 border-black border-l border-t flex justify-center items-center {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ if ne $value 0 }}{{ $value }}{{ end }}</div> 
-          {{ end }}
-        {{ end }}
-      </div>
+      {{ template "sudokugrid" .Grid}}
     <div class="absolute text-xs left-1/2 -translate-x-1/2 -translate-y-0.5">{{ .Seed }}</div>
   </div>
 {{ end }}
+
+{{ block "sudokugrid" . }}
+  <div class="aspect-square h-full grid grid-cols-9 border-black border-b-2 border-r-2">
+    {{ range $rowIndex, $row := . }}
+      {{ range $colIndex, $value := $row }}
+        <div class="text-inherit leading-3 border-black border-l border-t flex justify-center items-center {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ if ne $value 0 }}{{ $value }}{{ end }}</div> 
+      {{ end }}
+    {{ end }}
+  </div>
+
+{{ end}}
