@@ -107,6 +107,20 @@ func main() {
 		templates.ExecuteTemplate(w, "sudokus", sudokusData)
 	})
 
+	http.HandleFunc("/check", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Println("arst")
+		templates.ExecuteTemplate(w, "check", struct{}{})
+	})
+
+	http.HandleFunc("/solution", func(w http.ResponseWriter, r *http.Request) {
+		r.ParseForm()
+		seed := r.Form.Get("seed")
+
+		fmt.Println(seed)
+
+		// templates.ExecuteTemplate(w, "sudokus", sudokusData)
+	})
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
 

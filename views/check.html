@@ -1,0 +1,45 @@
+{{ block "check" . }}
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+      />
+      <title>Check Sudoku puzzle</title>
+      <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+      <link href="./static/output.css" rel="stylesheet">
+    </head>
+    <body>
+      {{ template "solutionform" . }}
+    </body>
+  </html>
+{{ end }}
+
+{{ block "solutionform" .}}
+  <main class="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div class="max-w-md w-full space-y-6 p-6 bg-white rounded-lg shadow-md">
+      <h1 class="text-3xl font-bold text-center text-gray-900">Check solution</h1>
+      <form class="space-y-4" hx-post="/solution" hx-target="body">
+        <div class="flex items-center space-x-2">
+          <label for="seed" class="text-gray-700">
+            Puzzle ID:
+          </label>
+          <input
+            name="seed"
+            required
+            class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            type="text"
+          />
+        </div>
+        <button
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+          type="submit"
+        >
+          Get Solution
+        </button>
+      </form>
+    </div>
+  </main>
+{{ end }}
