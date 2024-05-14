@@ -1,20 +1,20 @@
 {{ block "index" . }}
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
-    <title>Document</title>
-    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
-    <link href="./static/output.css" rel="stylesheet">
-  </head>
-  <body>
-    {{ template "form" . }}
-  </body>
-</html>
+  <!DOCTYPE html>
+  <html lang="en">
+    <head>
+      <meta charset="UTF-8" />
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+      />
+      <title>Document</title>
+      <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+      <link href="./static/output.css" rel="stylesheet">
+    </head>
+    <body>
+      {{ template "form" . }}
+    </body>
+  </html>
 {{ end }}
 
 {{ block "form" .}}
@@ -23,51 +23,50 @@
 // https://v0.dev/t/sFWGyguRnI2
 -->
 
-<main class="flex flex-col items-center justify-center h-screen bg-gray-100">
-  <div class="max-w-md w-full space-y-6 p-6 bg-white rounded-lg shadow-md">
-    <h1 class="text-3xl font-bold text-center text-gray-900">Sudoku Generator</h1>
-    <form class="space-y-4" hx-post="/generate" hx-target="body">
-      <div class="flex items-center space-x-2">
-        <label for="pages" class="text-gray-700">
-          Number of Pages:
-        </label>
-        <input
-          name="pages"
-          min="1"
-          max="{{ .MaxPages }}"
-          required
-          value="1"
-          class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-          type="number"
-        />
-      </div>
-      <div class="flex items-center space-x-2">
-        <label class="text-gray-700">Puzzles per Page:</label>
+  <main class="flex flex-col items-center justify-center h-screen bg-gray-100">
+    <div class="max-w-md w-full space-y-6 p-6 bg-white rounded-lg shadow-md">
+      <h1 class="text-3xl font-bold text-center text-gray-900">Sudoku Generator</h1>
+      <form class="space-y-4" hx-post="/generate" hx-target="body">
         <div class="flex items-center space-x-2">
-          {{ range $index, $value := .SudokusPerPageOptions }}
-            <div class="flex items-center">
-              <input
-                class="form-radio text-blue-500 focus:ring-blue-500"
-                type="radio"
-                value="{{ $value }}"
-                name="sudokusPerPage"
-                {{ if eq $index 0 }}checked{{ end }}
-              />
-              <label class="ml-2 text-gray-700">{{ $value }}</label>
-            </div>
-          {{ end }}
+          <label for="pages" class="text-gray-700">
+            Number of Pages:
+          </label>
+          <input
+            name="pages"
+            min="1"
+            max="{{ .MaxPages }}"
+            required
+            value="1"
+            class="px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            type="number"
+          />
         </div>
-      </div>
-      <button
-        class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
-        type="submit"
-      >
-        Generate Puzzles
-      </button>
-    </form>
-  </div>
-</main>
-
+        <div class="flex items-center space-x-2">
+          <label class="text-gray-700">Puzzles per Page:</label>
+          <div class="flex items-center space-x-2">
+            {{ range $index, $value := .SudokusPerPageOptions }}
+              <div class="flex items-center">
+                <input
+                  class="form-radio text-blue-500 focus:ring-blue-500"
+                  type="radio"
+                  value="{{ $value }}"
+                  name="sudokusPerPage"
+                  {{ if eq $index 0 }}checked{{ end }}
+                />
+                <label class="ml-2 text-gray-700">{{ $value }}</label>
+              </div>
+            {{ end }}
+          </div>
+        </div>
+        <button
+          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full"
+          type="submit"
+        >
+          Generate Puzzles
+        </button>
+      </form>
+    </div>
+  </main>
 {{ end }}
 
 {{ block "sudokus" . }}
@@ -89,14 +88,14 @@
 {{ end }}
 
 {{ block "sudoku" . }}
-<div class="relative">
-    <div class="aspect-square h-full grid grid-cols-9 border-black border-b-2 border-r-2">
-      {{ range $rowIndex, $row := .Grid }}
-        {{ range $colIndex, $value := $row }}
-          <div class="text-inherit leading-3 border-black border-l border-t flex justify-center items-center {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ if ne $value 0 }}{{ $value }}{{ end }}</div> 
+  <div class="relative">
+      <div class="aspect-square h-full grid grid-cols-9 border-black border-b-2 border-r-2">
+        {{ range $rowIndex, $row := .Grid }}
+          {{ range $colIndex, $value := $row }}
+            <div class="text-inherit leading-3 border-black border-l border-t flex justify-center items-center {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ if ne $value 0 }}{{ $value }}{{ end }}</div> 
+          {{ end }}
         {{ end }}
-      {{ end }}
-    </div>
-  <div class="absolute text-xs left-1/2 -translate-x-1/2 -translate-y-0.5">{{ .Seed }}</div>
-</div>
+      </div>
+    <div class="absolute text-xs left-1/2 -translate-x-1/2 -translate-y-0.5">{{ .Seed }}</div>
+  </div>
 {{ end }}
