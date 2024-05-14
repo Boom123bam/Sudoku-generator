@@ -77,21 +77,26 @@
       {{ if ne $i 0 }}
       <hr class="w-full h-8 y-100 border-0 bg-gray-50 no-print"/>
       {{ end }}
-      <div class="h-screen grid {{ if eq $spp 6 }} grid-cols-2  grid-rows-3 text-4xl {{ else if eq $spp 2 }} grid-rows-2 text-5xl {{end}} gap-y-1 gap-x-3 justify-items-center p-2">
-      {{ range $page.Sudokus }}
-        {{ template "sudoku" . }}
-      {{ end }}
+      <div class="flex justify-center">
+        <div class="grid h-screen gap-y-3 gap-x-3 p-2 pb-4 {{ if eq $spp 6 }} grid-cols-2  grid-rows-3 text-4xl {{ else if eq $spp 2 }} grid-rows-2 text-5xl {{end}}">
+          {{ range $page.Sudokus }}
+            {{ template "sudoku" . }}
+          {{ end }}
+        </div>
       </div>
     {{ end }}
     </div>
 {{ end }}
 
 {{ block "sudoku" . }}
-  <div class="grid grid-cols-9 aspect-square border-black border-b-2 border-r-2">
-    {{ range $rowIndex, $row := . }}
-      {{ range $colIndex, $value := $row }}
-        <div class="text-inherit leading-3 border-black border-l border-t flex justify-center items-center {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ if ne $value 0 }}{{ $value }}{{ end }}</div> 
+<div class="relative">
+    <div class="aspect-square h-full grid grid-cols-9 border-black border-b-2 border-r-2">
+      {{ range $rowIndex, $row := .Grid }}
+        {{ range $colIndex, $value := $row }}
+          <div class="text-inherit leading-3 border-black border-l border-t flex justify-center items-center {{if mod $rowIndex 3}}border-t-2{{end}} {{if mod $colIndex 3}}border-l-2{{end}}">{{ if ne $value 0 }}{{ $value }}{{ end }}</div> 
+        {{ end }}
       {{ end }}
-    {{ end }}
-  </div>
+    </div>
+  <div class="absolute text-xs left-1/2 -translate-x-1/2 -translate-y-0.5">{{ .Seed }}</div>
+</div>
 {{ end }}

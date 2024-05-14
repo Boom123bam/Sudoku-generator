@@ -1,12 +1,15 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/binary"
 	"fmt"
 	"html/template"
 	"log"
 	"net/http"
 	"strconv"
 	"sudoku-generator/sudoku"
+	"time"
 )
 
 type FormData struct {
@@ -24,8 +27,13 @@ var formConstraints = FormConstraints{
 	SudokusPerPageOptions: []int{2, 6},
 }
 
+type Sudoku struct {
+	Grid sudoku.SudokuGrid
+	Seed string
+}
+
 type Page struct {
-	Sudokus []sudoku.SudokuGrid
+	Sudokus []Sudoku
 }
 
 type SudokusData struct {
@@ -89,7 +97,8 @@ func main() {
 		for page := 0; page < formData.Pages; page++ {
 			page := Page{}
 			for i := 0; i < formData.SudokusPerPage; i++ {
-				sudoku := sudoku.NewGrid(true)
+				seed := GenerateSeed()
+				sudoku := Sudoku{Grid: sudoku.NewGrid(&seed, false), Seed: string(seed)}
 				page.Sudokus = append(page.Sudokus, sudoku)
 			}
 			sudokusData.Pages = append(sudokusData.Pages, page)
@@ -99,4 +108,20 @@ func main() {
 	})
 
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+func GenerateSeed() []byte {
+	now := time.Now().UnixNano()
+	buf := make([]byte, 8)
+	binary.LittleEndian.PutUint64(buf, uint64(now))
+	sha := sha256.Sum256(buf)
+	return ToCharset(sha[:8])
+}
+
+func ToCharset(chars []byte) []byte {
+	charset := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	for i, char := range chars {
+		chars[i] = charset[int(char)%len(charset)]
+	}
+	return chars
 }

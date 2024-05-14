@@ -8,13 +8,20 @@ import (
 
 type SudokuGrid [9][9]int
 
-func NewGrid(random bool) SudokuGrid {
+func NewGrid(shortSeed *[]byte, solved bool) SudokuGrid {
 	grid := SudokuGrid{}
-	if !random {
+	if shortSeed == nil {
 		return grid
 	}
-	res := grid.fillRandom(0)
-	return *res.subtractRandom()
+
+	seed := [32]byte{}
+	copy(seed[:], *shortSeed)
+	rng := rand.New(rand.NewChaCha8(seed))
+	res := grid.fillRandom(0, rng)
+	if solved {
+		return *res
+	}
+	return *res.subtractRandom(rng)
 }
 
 func (grid SudokuGrid) Solve(cell int) []SudokuGrid {
@@ -114,7 +121,7 @@ func (grid SudokuGrid) String() string {
 	return res.String()
 }
 
-func (grid SudokuGrid) fillRandom(cell int) *SudokuGrid {
+func (grid SudokuGrid) fillRandom(cell int, rng *rand.Rand) *SudokuGrid {
 	if cell == 81 {
 		return &grid
 	}
@@ -122,19 +129,19 @@ func (grid SudokuGrid) fillRandom(cell int) *SudokuGrid {
 	c := cell % 9
 
 	if grid[r][c] != 0 {
-		return grid.fillRandom(cell + 1)
+		return grid.fillRandom(cell+1, rng)
 	}
 
 	nums := []int{1, 2, 3, 4, 5, 6, 7, 8, 9}
 	for len(nums) > 0 {
-		i := rand.IntN(len(nums))
+		i := rng.IntN(len(nums))
 		num := nums[i]
 		nums = append(nums[:i], nums[i+1:]...)
 		if !grid.CellIsValid(r, c, num) {
 			continue
 		}
 		grid[r][c] = num
-		result := grid.fillRandom(cell + 1)
+		result := grid.fillRandom(cell+1, rng)
 		if result != nil {
 			return result
 		}
@@ -143,7 +150,7 @@ func (grid SudokuGrid) fillRandom(cell int) *SudokuGrid {
 	return nil
 }
 
-func (grid SudokuGrid) subtractRandom() *SudokuGrid {
+func (grid SudokuGrid) subtractRandom(rng *rand.Rand) *SudokuGrid {
 	// assume filled grid
 
 	remainingCells := 81
@@ -152,9 +159,9 @@ func (grid SudokuGrid) subtractRandom() *SudokuGrid {
 		subtractableCells[i] = i
 	}
 
-	target := 30 - rand.IntN(5)
+	target := 30 - rng.IntN(5)
 	for remainingCells > target && len(subtractableCells) > 0 {
-		n := rand.IntN(len(subtractableCells))
+		n := rng.IntN(len(subtractableCells))
 		r, c := subtractableCells[n]/9, subtractableCells[n]%9
 		temp := grid[r][c]
 		grid[r][c] = 0
