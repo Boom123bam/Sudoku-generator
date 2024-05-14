@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -78,21 +77,18 @@ func main() {
 		err := error(nil)
 		formData.Pages, err = strconv.Atoi(r.Form.Get("pages"))
 		if err != nil {
-			fmt.Println(err)
-			http.Error(w, "Bad Request", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		formData.SudokusPerPage, err = strconv.Atoi(r.Form.Get("sudokusPerPage"))
 		if err != nil {
-			fmt.Println(err)
-			http.Error(w, "Bad Request", http.StatusBadRequest)
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 		if !formData.IsValid() {
-			http.Error(w, "Bad Request", http.StatusBadRequest)
+			http.Error(w, "Invalid form data", http.StatusBadRequest)
 			return
 		}
-		fmt.Println(formData)
 
 		sudokusData := SudokusData{SudokusPerPage: formData.SudokusPerPage}
 
